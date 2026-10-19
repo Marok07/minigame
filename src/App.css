@@ -1,0 +1,14 @@
+.board-row {
+    display: flex;
+}
+.square {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    font-size: 25px;
+    margin-top: -1px;
+    margin-right: -1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
