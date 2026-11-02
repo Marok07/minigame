@@ -12,3 +12,6 @@
     align-items: center;
     justify-content: center;
 }
+.square.lastcell {
+    background-color: lightgray;
+}
