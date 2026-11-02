@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { PLAYER_X, PLAYER_O, Square } from "./Square";
 
-export function Board() {
+export function Board({ onGameEnd }) {
     const BOARD_SIDES = 3;
     const BOARD_INDICES = [...Array(BOARD_SIDES).keys()]; // [0, 1, 2]
     const CELL_COUNT = BOARD_SIDES * BOARD_SIDES;
@@ -32,10 +32,12 @@ export function Board() {
         if (isGameOver) {
             setWinner(player);
             setGameOver(true);
+            onGameEnd(player);
             return;
         }
         if (newStatus.every((cell) => cell)) {
             setGameOver(true);
+            onGameEnd(null);
         }
     }
     function handlePlayAgain() {
@@ -50,7 +52,7 @@ export function Board() {
         if (player !== PLAYER_X && player !== PLAYER_O) return;
         if (lastPlayer.current === player) return;
         if (status[idx]) return;
-        if (winner) return;
+        if (gameOver) return;
         lastPlayer.current = player;
         const newStatus = status.map((value, index) => (index === idx ? player : value));
         win_check(newStatus, player);
