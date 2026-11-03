@@ -76,7 +76,7 @@ export function Board({ onGameEnd }) {
                         })}
                     </div>
                 ))}
-                {gameOver && winner && <div>`Game over! {winner} won`</div>}
+                {gameOver && winner && <div>Game over! {winner} won</div>}
                 {gameOver && !winner && <div>Draw! No winner</div>}
                 {gameOver && <button onClick={handlePlayAgain}>Reset</button>}
             </div>
