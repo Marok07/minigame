@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { PLAYER_X, PLAYER_O, Square } from "./Square";
+import { win_check } from "../utils/gameUtils.js";
 
 export function Board({ onGameEnd }) {
     const BOARD_SIDES = 3;
@@ -8,38 +9,11 @@ export function Board({ onGameEnd }) {
 
     const [status, setStatus] = useState(new Array(CELL_COUNT).fill(undefined));
     let lastPlayer = useRef();
-    const WIN_POSITIONS = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
+
     const [winner, setWinner] = useState(null);
     const [gameOver, setGameOver] = useState(false);
     const [lastCell, setLastCell] = useState();
-    function win_check(newStatus, player) {
-        const win_array = WIN_POSITIONS.map((pos) => {
-            const c1 = newStatus[pos[0]];
-            const c2 = newStatus[pos[1]];
-            const c3 = newStatus[pos[2]];
-            return c1 && c1 === c2 && c1 === c3 ? true : false;
-        });
-        const isGameOver = win_array.some((value) => value);
-        if (isGameOver) {
-            setWinner(player);
-            setGameOver(true);
-            onGameEnd(player);
-            return;
-        }
-        if (newStatus.every((cell) => cell)) {
-            setGameOver(true);
-            onGameEnd(null);
-        }
-    }
+
     function handlePlayAgain() {
         setStatus(new Array(CELL_COUNT).fill(undefined));
         setLastCell(undefined);
@@ -48,14 +22,16 @@ export function Board({ onGameEnd }) {
         lastPlayer.current = undefined;
     }
     function handleClick(idx, player) {
-        let newValue;
         if (player !== PLAYER_X && player !== PLAYER_O) return;
         if (lastPlayer.current === player) return;
         if (status[idx]) return;
         if (gameOver) return;
         lastPlayer.current = player;
         const newStatus = status.map((value, index) => (index === idx ? player : value));
-        win_check(newStatus, player);
+        win_check(newStatus, player, setWinner, setGameOver);
+        if (winner) {
+            onGameEnd(winner);
+        }
         setLastCell(idx);
         setStatus(newStatus);
     }
